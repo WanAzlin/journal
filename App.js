@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Intro from './app/components/screen/intro';
-import { useEffect } from 'react';
+import Journal from './app/components/screen/journal';
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
+  const [user, setUser] = useState({});
   const findUser = async () => {
     const result = await AsyncStorage.getItem('user');
-    console.log(result);
+    setUser(JSON.parse(result))
   };
   useEffect(() => {
     findUser();
   }, []);
-  return  <Intro/>;
+  return  <Journal user={user}/>;
     
  
 }
