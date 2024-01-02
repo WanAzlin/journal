@@ -3,9 +3,11 @@ import React, {useState, useEffect} from 'react'
 import { Colors } from './misc/color';
 import { StyleSheet, Text, View } from 'react-native';
 import SearchBar from '../../components/searchbar';
+import NoteInputModal from '../NoteInputModal';
 import { Ionicons } from '@expo/vector-icons';
 export default function journal({user}) {
     const [greet, setGreet] = useState('Evening');
+    const [modalVisible, setModalVisible] = useState(false);
     const findGreet = () => {
         const hrs = new Date().getHours();
         if (hrs === 0 || hrs < 12) return setGreet('Morning');
@@ -16,6 +18,11 @@ export default function journal({user}) {
     useEffect(() => {
         findGreet();
       }, []);
+
+    const handleOnSubmit = (title, desc) => {
+        console.log(title,desc);
+
+    }
   return (
         <>
         
@@ -24,8 +31,14 @@ export default function journal({user}) {
             <SearchBar containerStyle={{ marginVertical: 15 }}/>
             <View style={[StyleSheet.absoluteFillObject,styles.emptyHeaderContainer]}>
                 <Text style={styles.emptyHeader}> Add Journal </Text>
-                <Ionicons onPress={() => console.log('opening modal')} style={styles.PlusIconBtn} name="add-circle" size={80} color="black" />
+                <Ionicons onPress={() => setModalVisible(true)} style={styles.PlusIconBtn} name="add-circle" size={80} color="black" />
             </View>
+            <NoteInputModal
+                  visible={modalVisible}
+                  onClose={() => setModalVisible(false)}
+                  onSubmit={handleOnSubmit}
+        
+            />
         </View>
         </>
   );
