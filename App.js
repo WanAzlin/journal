@@ -3,7 +3,13 @@ import Intro from './app/components/screen/intro';
 import Journal from './app/components/screen/journal';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NoteDetail from './app/components/NoteDetail';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+
 export default function App() {
+  const Stack = createStackNavigator();
   const [user, setUser] = useState({});
   const findUser = async () => {
     const result = await AsyncStorage.getItem('user');
@@ -12,13 +18,24 @@ export default function App() {
     }
   };
   useEffect(() => {
+    
     findUser();
    
   }, []);
+  const RenderJournal = props => <Journal{...props} user={user} />;
   if(!user.name) return<Intro onFinish={findUser}/>;
-  return  <Journal user={user}/>;
-    
- 
+  return  (
+  <NavigationContainer>
+     
+    <Stack.Navigator
+      screenOptions={{ headerTitle: '', headerTransparent: true }}
+    >
+      <Stack.Screen component={RenderJournal} name='Journal' />
+      <Stack.Screen component={NoteDetail} name='NoteDetail' />
+    </Stack.Navigator>
+  
+</NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({

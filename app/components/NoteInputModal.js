@@ -1,4 +1,4 @@
-import { Modal, StyleSheet, Text, TextInput, View,  TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { Modal, StyleSheet, Text, TextInput, View,  TouchableWithoutFeedback, Keyboard,  } from 'react-native'
 import { useState } from 'react';
 import { AntDesign } from '@expo/vector-icons';
  
@@ -45,7 +45,9 @@ const handleOnChangeText = (text, valueFor) => {
             
            { title.trim() || desc.trim ? ( <AntDesign name="close" size={24} color="white" onPress={closeModal}  /> ) : null}
          </View>
+         
          </View>
+
     </View>
     <TouchableWithoutFeedback onPress={handleModalClose}>
           <View style={[styles.modalBG, StyleSheet.absoluteFillObject]} />
