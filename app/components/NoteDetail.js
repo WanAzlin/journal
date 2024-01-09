@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native'
 import React, { useState }  from 'react';
 import { useHeaderHeight } from '@react-navigation/stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNotes } from '../context/NoteProvider';
 const formatDate = ms => {
   const date = new Date(ms);
   const day = date.getDate();
@@ -16,9 +18,38 @@ const formatDate = ms => {
 };
 
 const NoteDetail = props => {
-    const [note, ] = useState(props.route.params.note);
+    const [note, setNote ] = useState(props.route.params.note);
     const headerHeight = useHeaderHeight();
+    const {setNotes} = useNotes()
+    const deleteNote = async () => {
+        const result = await AsyncStorage.getItem('notes');
+        let notes = [];
+        if (result !== null) notes = JSON.parse(result);
     
+        const newNotes = notes.filter(n => n.id !== note.id);
+        setNotes(newNotes);
+        await AsyncStorage.setItem('notes', JSON.stringify(newNotes));
+        props.navigation.goBack();
+      };
+    const displayDeleteAlert = () => {
+        Alert.alert(
+          'Are You Sure!',
+          'This action will delete your note permanently!',
+          [
+            {
+              text: 'Delete',
+              onPress: deleteNote,
+            },
+            {
+              text: 'No Thanks',
+              onPress: () => console.log('no thanks'),
+            },
+          ],
+          {
+            cancelable: true,
+          }
+        );
+      };
   return (
     <>
     <ScrollView
@@ -29,7 +60,7 @@ const NoteDetail = props => {
       
     </ScrollView>
     <View style={styles.btnContainer}>
-    <AntDesign style={{  marginBottom: 15}} onPress={() => console.log('deleting note')} name="delete" size={34} color="black" />
+    <AntDesign style={{  marginBottom: 15}} onPress={displayDeleteAlert} name="delete" size={34} color="black" />
     <AntDesign style={{  marginBottom: 15}} onPress={() => console.log('editing note')}name="edit" size={34} color="black" />
   </View>
   </>

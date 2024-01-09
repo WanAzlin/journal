@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NoteDetail from './app/components/NoteDetail';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import NoteProvider from './app/context/NoteProvider';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -22,18 +22,18 @@ export default function App() {
     findUser();
    
   }, []);
-  const RenderJournal = props => <Journal{...props} user={user} />;
+  const renderJournal = props => <Journal{...props} user={user} />;
   if(!user.name) return<Intro onFinish={findUser}/>;
   return  (
   <NavigationContainer>
-     
+     <NoteProvider>
     <Stack.Navigator
       screenOptions={{ headerTitle: '', headerTransparent: true }}
     >
-      <Stack.Screen component={RenderJournal} name='Journal' />
+      <Stack.Screen component={renderJournal} name='Journal' />
       <Stack.Screen component={NoteDetail} name='NoteDetail' />
     </Stack.Navigator>
-  
+    </NoteProvider>
 </NavigationContainer>
   )
 }

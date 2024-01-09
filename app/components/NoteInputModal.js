@@ -13,7 +13,7 @@ const handleOnChangeText = (text, valueFor) => {
         if (valueFor === 'title') setTitle(text);
         if (valueFor === 'desc') setDesc(text);
       };
-    console.log(title, desc);
+    // console.log(title, desc);
     const handleSubmit = () => {
        onSubmit(title, desc);
        setTitle('');
